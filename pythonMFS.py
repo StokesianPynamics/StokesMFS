@@ -12,7 +12,7 @@ from numpy import linalg as la
 #CONTRUCT OSEEN TENSOR FOR EACH SITE/NODE PAIR TO CREATE A MATRIX (Eq. 9)
 #Input: rb: Nx3 list of node positions, rs: Mx3 list of site positions (M<N)
 #Output: A: matrix of Oseen tensors of each site/node pair
-def matrixConstruct(rb,rs):
+def matrixConstruct(rb,rs,mu=1):
     rb,rs = np.array(rb), np.array(rs)
     N, M = len(rb), len(rs)
     A = np.zeros([3*N,3*M]) #Initialise
@@ -36,7 +36,7 @@ def matrixConstruct(rb,rs):
             A[3*n,  3*m], A[3*n,  3*m+1], A[3*n,  3*m+2] = 1/r + rbsx*rbsx/r3, rbsx*rbsy/r3, rbsx*rbsz/r3 # instead of explicitly creating J,            #
             A[3*n+1,3*m], A[3*n+1,3*m+1], A[3*n+1,3*m+2] = rbsy*rbsx/r3, 1/r + rbsy*rbsy/r3, rbsy*rbsz/r3 # this calculated each component individually, #
             A[3*n+2,3*m], A[3*n+2,3*m+1], A[3*n+2,3*m+2] = rbsz*rbsx/r3, rbsz*rbsy/r3, 1/r + rbsz*rbsz/r3 # I've found it to be about 4x faster.         #  
-    A = A/(8*np.pi) #Change to (8*np.pi*mu) if using a non-unit viscosity
+    A = A/(8*np.pi*mu)
     return A
 
 #CONTRUCT VELOCITY SUPERVECTOR FOR EACH NODE (Eq. 10)
