@@ -1,2 +1,2 @@
 # StokesMFS
-_StokesMFS_ is three-dimensional Stokes-flow solver that uses the fundamental solutions. It can simulate almost any arbitrary particle with vanishing Reynolds number. It uses Python3, and requires numpy and matplotlib.
+_StokesMFS_ is three-dimensional Stokes-flow solver that uses the Method of Fundamental Solutions (MFS). It can simulate almost any arbitrary particle with vanishing Reynolds number. It uses Python3, and requires numpy and matplotlib. This work is a Python implementation of some of the methodology published in: _"The method of fundamental solutions for multi-particle Stokes flows: Application to a ring-like array of spheres"_, https://doi.org/10.1016/j.jcp.2024.113487. The main focus is flow visualisation.
