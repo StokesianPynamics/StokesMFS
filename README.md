@@ -26,5 +26,5 @@ These are the only functions required to simulate a particle, whose boundary is 
 This work is based on work supported by the Engineering and Physical Sciences Research Council: [EP/N016602/1] and [EP/V01207X/1].
 
 ## Refernces 
-[1]. Josiah J.P. Jordan and Duncan A. Lockerby. “The method of fundamental solutions for multi-particle Stokes flows: Application to a ring-like array of spheres”. In: _Journal of Computational Physics_ 520 (2025), p. 113487. doi.org/10.1016/j.jcp.2024.113487
+[1]. Josiah J.P. Jordan and Duncan A. Lockerby. “The method of fundamental solutions for multi-particle Stokes flows: Application to a ring-like array of spheres”. In: _Journal of Computational Physics_ 520 (2025), p. 113487. doi.org/10.1016/j.jcp.2024.113487\
 [2]. Duncan A. Lockerby and Benjamin Collyer. “Fundamental solutions to moment equations for the simulation of microscale gas flows”. In: _Journal of Fluid Mechanics_ 806 (2016), p. 413-436. doi.org/10.1017/jfm.2016.606 
