@@ -1,5 +1,5 @@
 # StokesMFS
-_StokesMFS_ is three-dimensional Stokes-flow solver that uses the Method of Fundamental Solutions (MFS). It can simulate almost any arbitrary particle with vanishing Reynolds number. This work is a Python implementation of some of the methodology published in [1]. The main focus of this repository is flow visualisation. 
+_StokesMFS_ is three-dimensional Stokes-flow solver that uses the Method of Fundamental Solutions (MFS). It can simulate almost any arbitrary particle with vanishing Reynolds number. This work is a Python implementation of some of the methodology published in [1], which is a continuation of the work in [2]. The main focus of this repository is flow visualisation. 
 
 ![Image](https://github.com/user-attachments/assets/addfc926-54e0-4230-806c-ca8c20cf7540)
 
@@ -21,6 +21,9 @@ These are the only functions required to simulate a particle, whose boundary is 
 1. Dynamic simulation of particles. For example, animation of a sphere settling under gravity.
 2. Improved speed for multi-particle simulations. This has been implemented in MATLAB for [1], and the methodology can be seen in that paper.
 3. Inclusion of rarefaction effects, starting with the G13 equations, possibly moving on to the R13 equations, or even the R26.
+
+## Acknowledgments
+This work is based on work supported by the Engineering and Physical Sciences Research Council [EP/N016602/1],and and [EP/V01207X/1].
 
 ## Refernces 
 [1]. Josiah J.P. Jordan and Duncan A. Lockerby. “The method of fundamental solutions for multi-particle Stokes flows: Application to a ring-like array of spheres”. In: _Journal of Computational Physics_ 520 (2025), p. 113487. https://doi.org/10.1016/j.jcp.2024.113487
