@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 #NOTE: -ALL variables non-dimensionalised with viscoity and a length scale
 #      -If you want to change viscosity, scale A matrix by 1/mu. Default here, mu=1
  
-example = 5 #input example number to run
+example = 6 #input example number to run
 
 if example == 1:
     #EXAMPLE 1: force and torque on a unit sphere, normalised by f = 6\pi\mu R|V| and t = 8\pi\mu R\omega
@@ -21,8 +21,9 @@ if example == 1:
 
 elif example == 2:
     #EXAMPLE 2: resistance tensor of a spheroid, normalised by the force on a single sphere of radius R=a=b=0.5c
-    rb = mfs.spheroidMaker(200,1,1,2)
-    rs = mfs.spheroidMaker(160,0.5,0.5,1)
+    rb, nb = mfs.spheroidMaker(200,1,1,2)
+    rs = mfs.rsFinder(rb,nb)
+    #rs = mfs.spheroidMaker(160,0.5,0.5,1)
     Re = np.zeros([6,6]) #initialise
     v =np.eye(3) 
     for dir in range(3): #three orthogonal directions
@@ -134,7 +135,7 @@ elif example == 4:
     ax.set_axis_off()
     plt.show()
 
-if example == 5:
+elif example == 5:
     #EXAMPLE 5: calculate error and matrix conditioning with different size rs and different N
     #This is for information, if you are interested in why the site location is important. Condition number and error are inversely proportional for the most part
     plt.rcParams['font.size'] = 14
@@ -180,9 +181,24 @@ if example == 5:
     
     plt.show()
 
-
-if example == 6:
-    print("I haven't got that far yet...")
+elif example == 6:
+    #EXAMPLE 6: plot animation of two spheres falling together
+    c1 = np.array([-1,-1,0]) #centres of each sphere
+    c2 = np.array([1,1,0])
+    fg = np.array([0,0,9.81])
+    ### Find force on sites of sphere ###
+    N = 100
+    M = int(np.floor(0.8*N))                
+    rbO = mfs.sphereMaker(N,1)        #create N nodes on sphere
+    rsO = mfs.sphereMaker(M,0.5)      #create M sites in sphere (radius smaller than that of the nodes, so outside the flow)
+    rb = np.vstack([rbO + c1, rbO + c2]) 
+    rs = np.vstack([rsO + c1, rsO + c2])
+    N = len(rb)
+    M = len(rs) 
+    A = mfs.matrixConstruct(rb,rs)
+    f = np.tile(fg,M)
+    v = np.matmul(A,f)
+    print(v[0:6])
     
 
 else:

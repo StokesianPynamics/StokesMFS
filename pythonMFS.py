@@ -72,7 +72,7 @@ def findForceAndTorque(rb,rs,V,om):
 ######- these are  not needed -######
 ######-- for the MFS but are --######
 ######------ very useful ------######
-######################################
+#####################################
 
 #FUNCTION TO FIND SITES GIVEN NODES & NORMALS
 #Input: rb: node positions, nb: node normal (nb[i,:] is the outward-facing normal of the ith node (rb[i,:]))
@@ -138,7 +138,10 @@ def spheroidMaker(nPoints,a,b,c):
     x, y, z = a*np.cos(theta) * np.sin(phi), b*np.sin(theta) * np.sin(phi), c*np.cos(phi)
 
     points = np.array([x,y,z]).T
-    return points  
+
+    normals = np.array([x/a**2, y/b**2, z/c**2]).T
+    normals = normals/la.norm(normals,axis=1,keepdims=True)
+    return points, normals 
 
 #FUNCTION BECAUSE I GOT TIRED OF CONTINOUSLY WRITING IT
 def printForce(f):
