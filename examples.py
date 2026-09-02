@@ -180,6 +180,9 @@ if example == 5:
     
     plt.show()
 
+
+if example == 6:
+    print("I haven't got that far yet...")
     
 
 else:
