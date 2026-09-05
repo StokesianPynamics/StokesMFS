@@ -186,6 +186,9 @@ elif example == 6:
     c1 = np.array([-1,-1,0]) #centres of each sphere
     c2 = np.array([1,1,0])
     fg = np.array([0,0,9.81])
+    I = 0.4 #Moment of inertia of a sphere with mass = 1 and radius = 1
+    nSteps = 10 #Number of time steps
+    dt = 0.01 #Time discretisation
     ### Find force on sites of sphere ###
     N = 100
     M = int(np.floor(0.8*N))                
@@ -195,10 +198,49 @@ elif example == 6:
     rs = np.vstack([rsO + c1, rsO + c2])
     N = len(rb)
     M = len(rs) 
+    fg = fg/(2*M)
     A = mfs.matrixConstruct(rb,rs)
     f = np.tile(fg,M)
     v = np.matmul(A,f)
-    print(v[0:6])
+    w1, w2 = np.zeros([3,]), np.zeros([3,])
+    print(v.shape)
+    fPerStep = np.zeros(nSteps)
+    step = 0
+    for t in range(nSteps):
+        #v = u + at, m=1, a=f/m => v = u + f*dt
+        #Calculate force
+        pinva = np.linalg.pinv(A)
+        f = np.matmul(pinva,v)
+        f = np.reshape(f,[M,3])
+        v = np.reshape(v,[N,3])
+        f1, f2 = np.split(f,2)
+        f1 = sum(f1,0)
+        f2 = sum(f2,0)
+        #Calculate torque
+        t = np.zeros([M,3])
+        for m in range(np.size(rs,0)):
+            t[m,:] = np.cross(rs[m,:],f[m,:]) 
+        t1, t2 = np.split(t,2)
+        #Calculate angular velocities 
+        w1 = w1 + np.sum(t1,0)*dt/I
+        w2 = w1 + np.sum(t2,0)*dt/I
+        #Calculate linear velocities
+        v1,v2 = np.split(v,2)
+        for n in range(np.size(v1,0)):
+            v1[n,:] = v1[n,:] + np.cross(w1,rb[n,:])
+            v2[n,:] = v2[n,:] + np.cross(w2,rb[n,:])
+        v1 = v1 + f1*dt
+        v2 = v2 + f2*dt
+
+        v = np.vstack([v1,v2])
+        v = np.reshape(v,[3*N,])
+        f = np.reshape(f,[3*M,])
+
+        fPerStep[step] = np.linalg.norm(np.sum(f,0))/(6*np.pi*2)
+        step += 1
+    print(fPerStep)
+
+
     
 
 else:
