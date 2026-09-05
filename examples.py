@@ -208,27 +208,32 @@ elif example == 6:
     step = 0
     for t in range(nSteps):
         #v = u + at, m=1, a=f/m => v = u + f*dt
+        rb1, rb2 = np.split(rb,2)
+        rs1, rs2 = np.split(rs,2)
+
         #Calculate force
         pinva = np.linalg.pinv(A)
         f = np.matmul(pinva,v)
         f = np.reshape(f,[M,3])
         v = np.reshape(v,[N,3])
         f1, f2 = np.split(f,2)
-        f1 = sum(f1,0)
-        f2 = sum(f2,0)
+        
         #Calculate torque
-        t = np.zeros([M,3])
-        for m in range(np.size(rs,0)):
-            t[m,:] = np.cross(rs[m,:],f[m,:]) 
-        t1, t2 = np.split(t,2)
+        t1, t2 = np.zeros([M//2,3]), np.zeros([M//2,3])
+        for m in range(np.size(t1,0)):
+            t1[m,:] = np.cross(rs1[m,:] - c1,f1[m,:]) 
+            t2[m,:] = np.cross(rs2[m,:] - c2,f2[m,:]) 
+        
         #Calculate angular velocities 
         w1 = w1 + np.sum(t1,0)*dt/I
         w2 = w1 + np.sum(t2,0)*dt/I
         #Calculate linear velocities
+        f1 = sum(f1,0)
+        f2 = sum(f2,0)
         v1,v2 = np.split(v,2)
         for n in range(np.size(v1,0)):
-            v1[n,:] = v1[n,:] + np.cross(w1,rb[n,:])
-            v2[n,:] = v2[n,:] + np.cross(w2,rb[n,:])
+            v1[n,:] = v1[n,:] + np.cross(w1,rb[n,:]-c1)
+            v2[n,:] = v2[n,:] + np.cross(w2,rb[n,:]-c2)
         v1 = v1 + f1*dt
         v2 = v2 + f2*dt
 
