@@ -183,11 +183,11 @@ elif example == 5:
 
 elif example == 6:
     #EXAMPLE 6: plot animation of two spheres falling together
-    c1 = np.array([-1,-1,0]) #centres of each sphere
-    c2 = np.array([1,1,0])
+    c1 = np.array([2,0,0]) #centres of each sphere
+    c2 = np.array([-2,0,0])
     fg = np.array([0,0,9.81])
     I = 0.4 #Moment of inertia of a sphere with mass = 1 and radius = 1
-    nSteps = 10 #Number of time steps
+    nSteps = 15 #Number of time steps
     dt = 0.01 #Time discretisation
     ### Find force on sites of sphere ###
     N = 100
@@ -203,15 +203,19 @@ elif example == 6:
     f = np.tile(fg,M)
     v = np.matmul(A,f)
     w1, w2 = np.zeros([3,]), np.zeros([3,])
-    print(v.shape)
     fPerStep = np.zeros(nSteps)
     step = 0
+    c1Hist, c2Hist = np.zeros([nSteps,3]), np.zeros([nSteps,3])
+    tHist = np.linspace(1,nSteps,nSteps)
     for t in range(nSteps):
+        c1Hist[step,:],c2Hist[step,:] = c1, c2
+
         #v = u + at, m=1, a=f/m => v = u + f*dt
         rb1, rb2 = np.split(rb,2)
         rs1, rs2 = np.split(rs,2)
 
         #Calculate force
+        A = mfs.matrixConstruct(rb,rs)
         pinva = np.linalg.pinv(A)
         f = np.matmul(pinva,v)
         f = np.reshape(f,[M,3])
@@ -226,7 +230,7 @@ elif example == 6:
         
         #Calculate angular velocities 
         w1 = w1 + np.sum(t1,0)*dt/I
-        w2 = w1 + np.sum(t2,0)*dt/I
+        w2 = w2 + np.sum(t2,0)*dt/I
         #Calculate linear velocities
         f1 = sum(f1,0)
         f2 = sum(f2,0)
@@ -241,9 +245,21 @@ elif example == 6:
         v = np.reshape(v,[3*N,])
         f = np.reshape(f,[3*M,])
 
+        rb1, rb2 = rb1 + v1*dt, rb2 + v2*dt
+        rb1, rb2 = mfs.rotVec(w1[0]*dt,w1[1]*dt,w1[2]*dt,(rb1-c1).T) + c1, mfs.rotVec(w2[0]*dt,w2[1]*dt,w2[2]*dt,(rb2-c2).T) + c2
+        rs1, rs2 = mfs.rotVec(w1[0]*dt,w1[1]*dt,w1[2]*dt,(rs1-c1).T) + c1, mfs.rotVec(w2[0]*dt,w2[1]*dt,w2[2]*dt,(rs2-c2).T) + c2
+        c1, c2 = np.mean(rb1,axis=0), np.mean(rb2,axis=0)
+        rb = np.vstack([rb1,rb2])
+        rs = np.vstack([rs1,rs2])
+        
         fPerStep[step] = np.linalg.norm(np.sum(f,0))/(6*np.pi*2)
+        print(step)
         step += 1
     print(fPerStep)
+    fig, ax = plt.subplots()
+    ax.plot(tHist,c1Hist[:,2])
+    ax.plot(tHist,c2Hist[:,2])
+    plt.show()  
 
 
     

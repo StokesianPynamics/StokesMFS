@@ -148,3 +148,16 @@ def printForce(f):
     f = np.reshape(f,[int(np.size(f)/3),3])
     f = np.sum(f,0)/(6*np.pi)
     print(f"Normalised net force: {np.round(f,5)}")
+
+#FUNCTION TO ROTATE A (3,N) NP.ARRAY, X, FROM EULER ANGLES a, b, and c
+#!!! X is of size (3,N) !!!
+def rotVec(a, b, c, X):
+    if X.shape[0] !=3:
+        raise ValueError(f"Ensure X is of size (3,N)")
+    rotx = np.array([[1,0,0],[0,np.cos(a),-np.sin(a)],[0,np.sin(a),np.cos(a)]])
+    roty = np.array([[np.cos(b),0,np.sin(b)],[0,1,0],[-np.sin(b),0,np.cos(b)]])
+    rotz = np.array([[np.cos(c),-np.sin(c),0],[np.sin(c),np.cos(c),0],[0,0,1]])
+    X = np.matmul(rotx,X)
+    X = np.matmul(roty,X)
+    X = np.matmul(rotz,X)
+    return X.T
