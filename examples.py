@@ -183,11 +183,11 @@ elif example == 5:
 
 elif example == 6:
     #EXAMPLE 6: plot animation of two spheres falling together
-    c1 = np.array([2,0,0]) #centres of each sphere
+    c1 = np.array([2,0,-1]) #centres of each sphere
     c2 = np.array([-2,0,0])
     fg = np.array([0,0,9.81])
     I = 0.4 #Moment of inertia of a sphere with mass = 1 and radius = 1
-    nSteps = 15 #Number of time steps
+    nSteps = 25 #Number of time steps
     dt = 0.01 #Time discretisation
     ### Find force on sites of sphere ###
     N = 100
@@ -218,7 +218,7 @@ elif example == 6:
         A = mfs.matrixConstruct(rb,rs)
         pinva = np.linalg.pinv(A)
         f = np.matmul(pinva,v)
-        f = np.reshape(f,[M,3])
+        f = np.reshape(f,[M,3]) - fg
         v = np.reshape(v,[N,3])
         f1, f2 = np.split(f,2)
         
@@ -253,7 +253,7 @@ elif example == 6:
         rs = np.vstack([rs1,rs2])
         
         fPerStep[step] = np.linalg.norm(np.sum(f,0))/(6*np.pi*2)
-        print(step)
+        print(f"Step {step}, average force = {fPerStep[step]}")
         step += 1
     print(fPerStep)
     fig, ax = plt.subplots()
