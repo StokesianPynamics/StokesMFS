@@ -183,11 +183,11 @@ elif example == 5:
     plt.show()
 
 elif example == 6:
-    fg = [0,0,-9.81] #gravity in -ve z direction
-    nSteps = 10
-    dt = 0.01
+    fg = [0,0,-9.81/(6*np.pi)] #gravity in -ve z direction
+    nSteps = 150
+    dt = 0.0005
     
-    N = 100
+    N = 150
     rb = mfs.sphereMaker(N,1)
     rs = mfs.rsFinder(rb,rb)
     rs = rs[np.random.rand(N)<0.83]
@@ -206,7 +206,9 @@ elif example == 6:
         v = np.reshape(v,[N,3]) + ft*dt
         rb = rb + v*dt
         v = np.reshape(v,[3*N])
-        cHist[t,:] = np.mean(rb,axis=0)
+        c = np.mean(rb,axis=0)
+        rs = rs + c
+        cHist[t,:] = c
         print(f"Time step {t}, force magnitude = {ft[2]}")
     fig, ax = plt.subplots()
     ax.plot(tHist,cHist[:,2])
