@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 
 #NOTE: -ALL variables non-dimensionalised with viscoity and a length scale
 #      -If you want to change viscosity, scale A matrix by 1/mu. Default here, mu=1
+#      -Pretty much everything is a numpy array
  
 example = 6 #input example number to run
 
@@ -182,6 +183,40 @@ elif example == 5:
     plt.show()
 
 elif example == 6:
+    fg = [0,0,-9.81] #gravity in -ve z direction
+    nSteps = 10
+    dt = 0.01
+    
+    N = 100
+    rb = mfs.sphereMaker(N,1)
+    rs = mfs.rsFinder(rb,rb)
+    rs = rs[np.random.rand(N)<0.83]
+    M = rs.shape[0]
+    print(f"Number of sites = {M}")
+    fg = np.repeat(fg,M)
+    v = np.zeros([3*N])
+    cHist = np.zeros([nSteps,3])
+    tHist = np.linspace(1,nSteps,nSteps)
+    for t in range(nSteps):
+        A = mfs.matrixConstruct(rb,rs)
+        pinva = np.linalg.pinv(A)
+        fd = np.matmul(pinva,v)
+        ft = fg - fd
+        ft = sum(np.reshape(ft,[M,3]),0)
+        v = np.reshape(v,[N,3]) + ft*dt
+        rb = rb + v*dt
+        v = np.reshape(v,[3*N])
+        cHist[t,:] = np.mean(rb,axis=0)
+        print(f"Time step {t}, force magnitude = {ft[2]}")
+    fig, ax = plt.subplots()
+    ax.plot(tHist,cHist[:,2])
+    plt.show()  
+
+
+
+
+
+elif example == 7:
     #EXAMPLE 6: plot animation of two spheres falling together
     c1 = np.array([2,0,-1]) #centres of each sphere
     c2 = np.array([-2,0,0])
@@ -253,7 +288,7 @@ elif example == 6:
         rs = np.vstack([rs1,rs2])
         
         fPerStep[step] = np.linalg.norm(np.sum(f,0))/(6*np.pi*2)
-        print(f"Step {step}, average force = {fPerStep[step]}")
+        print(f"Step {step}, average drag force = {fPerStep[step]}")
         step += 1
     print(fPerStep)
     fig, ax = plt.subplots()
