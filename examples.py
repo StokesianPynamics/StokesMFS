@@ -183,8 +183,8 @@ elif example == 5:
     plt.show()
 
 elif example == 6:
-    fg = [0,0,-9.81/(6*np.pi)] #gravity in -ve z direction
-    nSteps = 150
+    fg = [0,0,-0.01*9.81/(6*np.pi)] #gravity in -ve z direction
+    nSteps = 100
     dt = 0.0005
     
     N = 150
