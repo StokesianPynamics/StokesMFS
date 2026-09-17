@@ -189,10 +189,19 @@ elif example == 6:
     
     N = 150
     rb = mfs.sphereMaker(N,1)
-    rs = mfs.rsFinder(rb,rb)
-    rs = rs[np.random.rand(N)<0.83]
-    M = rs.shape[0]
+    rsO = mfs.rsFinder(rb,rb)
+    rsO = rsO[np.random.rand(N)<0.83]
+    rs = rsO
+    M = rsO.shape[0]
     print(f"Number of sites = {M}")
+
+    #A = mfs.matrixConstruct(rb,rs)
+    #pinva = np.linalg.pinv(A)
+    #maxl = np.max(np.abs(np.linalg.eigvals(pinva)))
+    #print(f"Convergence criteria = {maxl*dt/2}. Should be much less than 1.")
+    #if dt > 2/maxl:
+    #    print("Unstable initial conditions")
+
     fg = np.repeat(fg,M)
     v = np.zeros([3*N])
     cHist = np.zeros([nSteps,3])
@@ -207,8 +216,8 @@ elif example == 6:
         rb = rb + v*dt
         v = np.reshape(v,[3*N])
         c = np.mean(rb,axis=0)
-        rs = rs + c
         cHist[t,:] = c
+        rs = rsO + c
         print(f"Time step {t}, force magnitude = {ft[2]}")
     fig, ax = plt.subplots()
     ax.plot(tHist,cHist[:,2])
