@@ -185,7 +185,7 @@ elif example == 5:
 elif example == 6:
     fg = [0,0,-0.01*9.81/(6*np.pi)] #gravity in -ve z direction
     nSteps = 100
-    dt = 0.0005
+    dt = 0.05
     
     N = 150
     rb = mfs.sphereMaker(N,1)
@@ -193,15 +193,6 @@ elif example == 6:
     rsO = rsO[np.random.rand(N)<0.83]
     rs = rsO
     M = rsO.shape[0]
-    print(f"Number of sites = {M}")
-
-    #A = mfs.matrixConstruct(rb,rs)
-    #pinva = np.linalg.pinv(A)
-    #maxl = np.max(np.abs(np.linalg.eigvals(pinva)))
-    #print(f"Convergence criteria = {maxl*dt/2}. Should be much less than 1.")
-    #if dt > 2/maxl:
-    #    print("Unstable initial conditions")
-
     fg = np.repeat(fg,M)
     v = np.zeros([3*N])
     cHist = np.zeros([nSteps,3])
